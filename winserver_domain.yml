@@ -1,0 +1,18 @@
+---
+- name: Windows Join Domain Playbook
+  hosts: "{{ target_host_name }}*"
+  gather_facts: no
+
+  tasks:
+  - win_domain_membership:
+      dns_domain_name: "{{ domain_name }}"
+      hostname: "{{ name }}"
+      domain_admin_user: "{{ domain_admin_user }}"
+      domain_admin_password: "{{ domain_admin_password }}"
+      domain_ou_path: "{{ domain_ou_path }}"
+      state: domain
+    register: domain_state
+
+  - win_reboot:
+    when: domain_state.reboot_required
+...

@@ -1,0 +1,119 @@
+---
+- name: Windows Server Simple Playbook Demo
+  hosts: "{{ target_host_name }}*"
+
+  tasks:
+  # Warning Windows Current Active User that Automation is running
+  - name: Giving warning to the current user
+    win_say:
+      start_sound_path: C:\Windows\Media\ding.wav
+      msg: Warning, SkyNet is Now Operational. Hasta La Vista, Baby!
+      voice: Microsoft Zira Desktop
+
+  # Get Windows Product Info
+  - name: Get product id and product key
+    win_product_facts:
+
+  # Setting up dummy registry entries
+  - name: Create registry path MyCompanySoftware
+    win_regedit:
+      path: HKCU:\Software\MyCompanySoftware  
+  - name: Add or update registry path MyCompanySoftware, with entry 'name'
+    win_regedit:
+      path: HKCU:\Software\MyCompanySoftware
+      name: name
+      data: felizkarnadi
+  - name: Add or update registry path MyCompanySoftware, with entry 'employeeid'
+    win_regedit:
+      path: HKCU:\Software\MyCompanySoftware
+      name: employeeid
+      data: 113355
+
+  # Set format, location and unicode to English New Zealand, reboot if required
+  # Location 183 is New Zealand
+  - name: Set Regional Settings to New Zealand
+    win_region:
+      location: 183
+      format: en-NZ
+      unicode_language: en-NZ
+    register: reboot_result
+
+  # Change Timezone
+  - name : Change Timezone to New Zealand
+    win_timezone:
+      timezone: New Zealand Standard Time
+
+  # Set Page File
+  - name: Set C pagefile, don't override if exists
+    win_pagefile:
+      drive: C
+      initial_size: 2048
+      maximum_size: 2048
+      override: no
+      state: present
+
+  # Install MSI for 7Zip
+  - name: create installer directory
+    win_file:
+      path: C:\installer
+      state: directory
+  - name: download the 7-Zip package
+    win_get_url:
+      url: https://www.7-zip.org/a/7z1805-x64.msi
+      dest: C:\installer\7z.msi
+  - name: ensure 7-Zip is installed via win_package
+    win_package:
+      path: C:\installer\7z.msi
+      state: present
+
+  # Install/Update Software using Chocolatey.org package manager
+  # Chocolatey is going to be auto-installed if not present
+  # See https://chocolatey.org/packages for complete package list
+  - name: install software using Chocolatey.org
+    win_chocolatey:
+      name: "{{ item }}"
+      state: latest
+    with_items:
+      - firefox
+      - adobereader
+      - vlc
+
+  # Firewall Rule to enable RDP
+  - name: Enable Windows Firewall Rule 
+    win_firewall_rule:
+      name: Remote Desktop
+      localport: 3389
+      protocol: tcp
+      action: allow
+      direction: in
+      profiles: private
+      state: present
+      enabled: yes
+
+  # Enable Spooler Service
+  - name: Set service startup mode to auto and ensure it is started
+    win_service:
+      name: spooler
+      start_mode: auto
+      state: started
+
+  # Create URL Chortcut
+  - name: Create a URL shortcut for the Ingram Micro website
+    win_shortcut:
+      src: http://nz.ingrammicro.com/
+      dest: '%Public%\Desktop\Ingram website.url'
+
+  # Create Application Shortcut
+  - name: Create a shortcut for WordPad, with Hotkey
+    win_shortcut:
+      description: Your Favorite WordPad Text Editor
+      src: '%ProgramFiles%\Windows NT\Accessories\wordpad.exe'
+      dest: '%Public%\Desktop\WordPad.lnk'
+      icon: '%ProgramFiles%\Windows NT\Accessories\wordpad.exe,0'
+      hotkey: Ctrl+Alt+W
+  
+  # Reboot if required
+  - name: Reboot Windows if required by previous tasks
+    win_reboot:
+    when: reboot_result.restart_required
+...

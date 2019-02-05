@@ -1,0 +1,17 @@
+---
+- name: Windows Server Change Hostname
+  hosts: "{{ target_host_name }}*"
+
+  tasks:
+  # Set Computer Hostname, we get name variable from inventory host variable
+  - name: set windows hostname
+    win_hostname:
+      name: "{{ name }}"
+    register: hostname_change_result
+  - name: reboot if required
+    win_reboot:
+    when: hostname_change_result.reboot_required
+  - name: wait for windows connection
+    wait_for_connection:
+    when: hostname_change_result.reboot_required
+...

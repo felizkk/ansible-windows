@@ -1,0 +1,37 @@
+---
+- name: Windows Server Install AD Service
+  hosts: "{{ target_host_name }}*"
+
+  # The variables will be taken from Tower Survey
+  # Some example:
+  # ad_domain_name: redhat-winsrv2016-1.example.com
+  # ad_safe_mode_password: "r3dh@t!Tower"
+
+  tasks:
+  # Install AD-Domain-Services Features
+  - name: Install Active Directory
+    win_feature:
+      name: AD-Domain-Services
+      state: present
+
+  # Setup Domain Contoller
+  - name: Setup Windows Domain
+    win_domain:
+      dns_domain_name: "{{ ad_domain_name }}"
+      safe_mode_password: "{{ ad_safe_mode_password }}"
+    register: domain_result
+
+  # Reboots instance once completed
+  - name: Reboot server once domain is set
+    win_reboot:
+    when: domain_result.reboot_required
+
+  - name: Waiting until Windows host is ready
+    wait_for_connection:
+
+  # Execute shell command once reboot is done
+  # nltest /dclist:"{{ ad_domain_name }}"
+  - name: Query Windows Domain
+    win_command: nltest /dclist:"{{ ad_domain_name }}"
+    register: nltest_result
+...
