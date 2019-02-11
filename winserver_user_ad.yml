@@ -4,12 +4,12 @@
 
   # The variables will be taken from Tower Survey
   tasks:
-- name: Create Domain Users 
-  win_domain_user:
-    name: "{{ new_user_name }}"
-    firstname: "{{ new_user_firstname }}"
-    surname: "{{ new_user_surname }}"
-    password: "{{ new_user_password }}"
-    email: "{{ new_user_email }}"
-    state: present
+  - name: Create Domain Users 
+    win_domain_user:
+      name: "{{ new_user_name }}"
+      firstname: "{{ new_user_firstname }}"
+      surname: "{{ new_user_surname }}"
+      password: "{{ new_user_password }}"
+      email: "{{ new_user_email }}"
+      state: present
 ...
