@@ -1,5 +1,5 @@
 ---
-- name: Windows Install Software Demo
+- name: Windows Remove Software Demo
   hosts: "{{ target_host_name }}*"
 
   tasks:
@@ -7,12 +7,10 @@
   - name: Giving warning to the current user
     win_say:
       start_sound_path: C:\Windows\Media\ding.wav
-      msg: Please stand by! Windows is installing {{ software_name }}
+      msg: Please stand by! Windows is removing {{ software_name }}
       voice: Microsoft Zira Desktop
 
-  - name: install software using Chocolatey.org
+  - name: remove software using Chocolatey.org
     win_chocolatey:
       name: "{{ software_name }}"
-      state: latest
-
-  
+      state: absent
