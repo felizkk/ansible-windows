@@ -1,6 +1,6 @@
 ---
 - name: Playbook to Install IIS Server
-  hosts: winserver
+  hosts: "{{ target_host_name }}*"
   gather_facts: no 
 
   vars:
