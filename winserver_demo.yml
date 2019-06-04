@@ -10,10 +10,6 @@
       msg: Warning, SkyNet is Now Operational. Hasta La Vista, Baby!
       voice: Microsoft Zira Desktop
 
-  # Get Windows Product Info
-  - name: Get product id and product key
-    win_product_facts:
-
   # Setting up dummy registry entries
   - name: Create registry path MyCompanySoftware
     win_regedit:
