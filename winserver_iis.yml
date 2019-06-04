@@ -15,9 +15,6 @@
     iis_test_message: "Hello World!  My test IIS Server created by Ansible"
 
   tasks:
-  - name: make sure Windows is ready for Ansible connection, especially on Workflow execution
-    wait_for_connection:
-
   - name: Install IIS
     win_feature:
       name: Web-Server
