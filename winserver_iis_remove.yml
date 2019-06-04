@@ -1,0 +1,50 @@
+---
+- name: Playbook to Install IIS Server
+  hosts: winserver
+  gather_facts: no 
+
+  vars:
+    iis_sites:
+      - name: 'Ansible Website 1'
+        port: '8080'
+        path: 'C:\sites\website1'
+      - name: 'Ansible Website 2'
+        port: '8081'
+        path: 'C:\sites\website2'
+
+  tasks:
+  - name : Clear IIS sites if exist
+    win_iis_website:
+      name: "{{ item.name }}"
+      state: absent 
+    with_items: "{{ iis_sites }}"
+
+  - name: stop iis service
+    win_service:
+      name: W3Svc
+      state: stopped
+      start_mode: auto
+
+  - name: Clear existing site directory structures if exist
+    win_file:
+      path: "{{ item.path }}"
+      state: absent
+    with_items: "{{ iis_sites }}"
+
+  - name: Close port for site on the firewall
+    win_firewall_rule:
+      name: "iisport{{ item.port }}"
+      direction: In
+      action: Allow
+      state: absent
+    with_items: "{{ iis_sites }}"
+
+  - name: Uninstall IIS
+    win_feature:
+      name: Web-Server
+      state: absent
+ 
+  - win_reboot:
+
+  - wait_for_connection:
+...

@@ -1,0 +1,7 @@
+---
+# Useful to wait for Windows readyness after startup or reboot
+- name: Wait until Windows is available (600 seconds)
+  hosts: "{{ target_host_name }}*"
+  tasks:
+  - wait_for_connection:
+...

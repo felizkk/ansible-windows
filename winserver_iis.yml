@@ -1,15 +1,17 @@
 ---
 - name: Playbook to Install IIS Server
-  hosts: "{{ target_host_name }}*"
+  hosts: winserver 
 
   vars:
     iis_sites:
-      - name: 'website-1'
+      - name: 'Ansible Website 1'
         port: '8080'
         path: 'C:\sites\website1'
-      - name: 'website-2'
+        indexfile: 'index-website-1.html.j2'
+      - name: 'Ansible Website 2'
         port: '8081'
         path: 'C:\sites\website2'
+        indexfile: 'index-website-2.html.j2'
     iis_test_message: "Hello World!  My test IIS Server created by Ansible"
 
   tasks:
@@ -49,12 +51,12 @@
 
   - name: Template simple web site to iis_site_path as index.html
     win_template:
-      src: 'templates\index-{{ item.name }}.html.j2'
+      src: 'templates/{{ item.indexfile }}'
       dest: '{{ item.path }}\index.html'
     with_items: "{{ iis_sites }}"
 
   - name: copy the rest of html files
-    copy:
+    win_copy:
       src: "templates/static/"
       dest: "{{ item.path }}"
     with_items: "{{ iis_sites }}"  
