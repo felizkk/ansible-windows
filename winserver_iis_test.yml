@@ -1,6 +1,7 @@
 ---
 - name: Test HTTP Output
-  hosts: "{{ target_host_name }}*" 
+  hosts: "{{ target_host_name }}*"
+  gather_facts: yes
 
   vars:
     - website_ip: "{{ ansible_ip_addresses[0] }}"
