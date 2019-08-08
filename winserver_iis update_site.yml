@@ -1,0 +1,98 @@
+---
+- name: Download website source codes
+  hosts: localhost
+  connection: local
+  gather_facts: no
+
+  tasks:
+  - name: clear websource directory
+    file: 
+      path: "/tmp/websource"
+      state: absent  
+  - name: get the latest webpage source from git
+    git:
+      repo: "https://github.com/felizkk/php-website-demo.git"
+      dest: "/tmp/websource"
+
+- name: Playbook to Update IIS Server Sites
+  hosts: "{{ target_host_name }}*"
+
+  vars:
+    iis_sites:
+      - name: 'Ansible Website 1'
+        port: '8080'
+        path: 'C:\sites\website1'
+        indexfile: 'index-website-1.html.j2'
+      - name: 'Ansible Website 2'
+        port: '8081'
+        path: 'C:\sites\website2'
+        indexfile: 'index-website-2.html.j2'
+    iis_test_message: "Hello World!  My test IIS Server created by Ansible"
+    clear_if_exist: True
+
+  tasks:
+  - name: stop IIS service if needed
+    win_service:
+      name: W3Svc
+      state: stopped
+      start_mode: auto
+    when: clear_if_exist == True
+
+  - name: Clear existing site directory structure if any
+    win_file:
+      path: "{{ item.path }}"
+      state: absent
+    with_items: "{{ iis_sites }}"
+    when: clear_if_exist == True
+
+  - name: clear existing IIS site if any
+    win_iis_website:
+      name: "{{ item.name }}"
+      state: absent
+    with_items: "{{ iis_sites }}"  
+    when: clear_if_exist == True
+
+  - name: Create site directory structure
+    win_file:
+      path: "{{ item.path }}"
+      state: directory
+    with_items: "{{ iis_sites }}"
+
+  - name: Create IIS site
+    win_iis_website:
+      name: "{{ item.name }}"
+      state: started
+      port: "{{ item.port }}"
+      physical_path: "{{ item.path }}"
+    with_items: "{{ iis_sites }}"
+    notify: restart iis service
+
+  - name: Open port for site on the firewall
+    win_firewall_rule:
+      name: "iisport{{ item.port }}"
+      enable: yes
+      state: present
+      localport: "{{ item.port }}"
+      action: Allow
+      direction: In
+      protocol: Tcp
+    with_items: "{{ iis_sites }}"
+
+  - name: Template simple web site to iis_site_path as index.html
+    win_template:
+      src: '/tmp/websource/iis_site/jinja/{{ item.indexfile }}'
+      dest: '{{ item.path }}\index.html'
+    with_items: "{{ iis_sites }}"
+
+  - name: copy the rest of html files
+    win_copy:
+      src: "/tmp/websource/iis_site/static/"
+      dest: "{{ item.path }}"
+    with_items: "{{ iis_sites }}"
+
+  - name: start IIS service
+    win_service:
+      name: W3Svc
+      state: started
+      start_mode: auto
+...
