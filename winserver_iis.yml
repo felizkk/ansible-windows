@@ -13,12 +13,34 @@
         path: 'C:\sites\website2'
         indexfile: 'index-website-2.html.j2'
     iis_test_message: "Hello World!  My test IIS Server created by Ansible"
+    clear_if_exist: True
 
   tasks:
   - name: Install IIS
     win_feature:
       name: Web-Server
       state: present
+
+  - name: stop IIS service if needed
+    win_service:
+      name: W3Svc
+      state: stopped
+      start_mode: auto
+    when: clear_if_exist == True
+
+  - name: Clear existing site directory structure if any
+    win_file:
+      path: "{{ item.path }}"
+      state: absent
+    with_items: "{{ iis_sites }}"
+    when: clear_if_exist == True
+
+  - name: clear existing IIS site if any
+    win_iis_website:
+      name: "{{ item.name }}"
+      state: absent
+    with_items: "{{ iis_sites }}"  
+    when: clear_if_exist == True
 
   - name: Create site directory structure
     win_file:
