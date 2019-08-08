@@ -4,24 +4,30 @@
   gather_facts: yes
 
   vars:
-    - website_ip: "{{ ansible_ip_addresses[0] }}"
+    website_ip: "http://{{ ansible_ip_addresses[0] }}:8080"
+    ports:
+      - 8080
+      - 8081
   
   tasks:
   - name: check HTTP status 200 from GET
     win_uri:
-      url: "http://{{ website_ip }}"
+      url: "{{ website_ip }}:{{ item }}"
+    with_items: "{{ ports }}"
 
   - name: check if the word Ansible for Everyone is in the page contents
     win_uri:
-      url: "http://{{ website_ip }}"
+      url: "{{ website_ip }}:{{ item }}"
       return_content: yes
     register: weboutput1
     failed_when: "'Automation for Everyone' not in weboutput1.content"
+    with_items: "{{ ports }}"
 
   - name: check if the word Ansible Workshops is in the page contents
     win_uri:
-      url: "http://{{ website_ip }}"
+      url: "{{ website_ip }}:{{ item }}"
       return_content: yes
     register: weboutput2
     failed_when: "'Automation for Everyone' not in weboutput2.content"
+    with_items: "{{ ports }}"
 ...
