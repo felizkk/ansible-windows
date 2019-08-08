@@ -1,19 +1,4 @@
 ---
-- name: Download website source codes
-  hosts: localhost
-  connection: local
-  gather_facts: no
-
-  tasks:
-  - name: clear websource directory
-    file: 
-      path: "/tmp/websource"
-      state: absent  
-  - name: get the latest webpage source from git
-    git:
-      repo: "https://github.com/felizkk/php-website-demo.git"
-      dest: "/tmp/websource"
-
 - name: Playbook to Update IIS Server Sites
   hosts: "{{ target_host_name }}*"
 
@@ -80,13 +65,13 @@
 
   - name: Template simple web site to iis_site_path as index.html
     win_template:
-      src: '/tmp/websource/iis_site/jinja/{{ item.indexfile }}'
+      src: 'templates/{{ item.indexfile }}'
       dest: '{{ item.path }}\index.html'
     with_items: "{{ iis_sites }}"
 
   - name: copy the rest of html files
     win_copy:
-      src: "/tmp/websource/iis_site/static/"
+      src: "templates/static/"
       dest: "{{ item.path }}"
     with_items: "{{ iis_sites }}"
 
