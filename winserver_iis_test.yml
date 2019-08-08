@@ -4,7 +4,7 @@
   gather_facts: yes
 
   vars:
-    website_ip: "http://{{ ansible_ip_addresses[0] }}:8080"
+    website_ip: "http://{{ ansible_ip_addresses[0] }}"
     ports:
       - 8080
       - 8081
