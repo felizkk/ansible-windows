@@ -3,13 +3,6 @@
   hosts: "{{ target_host_name }}*"
 
   tasks:
-  # Warning Windows Current Active User that Automation is running
-  - name: Giving warning to the current user
-    win_say:
-      start_sound_path: C:\Windows\Media\ding.wav
-      msg: Warning, Windows name is now being changed. Prepare for reboot
-      voice: Microsoft Zira Desktop
-
   # Set Computer Hostname, we get name variable from inventory host variable
   - name: set windows hostname
     win_hostname:
