@@ -3,13 +3,6 @@
   hosts: "{{ target_host_name }}*"
 
   tasks:
-  # Warning Windows Current Active User that Automation is running
-  - name: Giving warning to the current user
-    win_say:
-      start_sound_path: C:\Windows\Media\ding.wav
-      msg: Warning, SkyNet is Now Operational. Hasta La Vista, Baby!
-      voice: Microsoft Zira Desktop
-
   # Setting up dummy registry entries
   - name: Create registry path MyCompanySoftware
     win_regedit:
