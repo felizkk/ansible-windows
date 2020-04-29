@@ -6,6 +6,8 @@
   - name: Install hotfix {{ hotfix_kb }}
     win_hotfix:
       hotfix_kb: "{{ hotfix_kb }}"
+      source: hotfixfile.msu
+      state: present
     register: hotfix_install
 
   - win_reboot:
