@@ -86,9 +86,9 @@
       state: started
 
   # Create URL Chortcut
-  - name: Create a URL shortcut for the Ingram Micro website
+  - name: Create a URL shortcut for Red Hat website
     win_shortcut:
-      src: http://nz.ingrammicro.com/
+      src: https://www.redhat.com
       dest: '%Public%\Desktop\Ingram website.url'
 
   # Create Application Shortcut
