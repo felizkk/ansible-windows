@@ -3,13 +3,6 @@
   hosts: "{{ target_host_name }}*"
 
   tasks:
-  # Warning Windows Current Active User that Automation is running
-  - name: Giving warning to the current user
-    win_say:
-      start_sound_path: C:\Windows\Media\ding.wav
-      msg: Please stand by! Windows is removing {{ software_name }}
-      voice: Microsoft Zira Desktop
-
   - name: remove software using Chocolatey.org
     win_chocolatey:
       name: "{{ software_name }}"
