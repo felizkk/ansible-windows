@@ -6,9 +6,8 @@
   - name: Install hotfix {{ hotfix_kb }}
     win_hotfix:
       hotfix_kb: "{{ hotfix_kb }}"
-      state: present
     register: hotfix_install
-    
+
   - win_reboot:
     when: hotfix_install.reboot_required  
 ...
