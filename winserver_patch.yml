@@ -8,4 +8,5 @@
       category_names:
         - SecurityUpdates
         - CriticalUpdates
+        - UpdateRollups
 ...
