@@ -1,0 +1,18 @@
+---
+- name: Windows Join Domain Playbook
+  hosts: "{{ target_host_name }}*"
+  gather_facts: no
+
+  tasks:
+  - win_domain_group:
+      name: "{{ domain_group_name }}"
+      scope: global
+      state: present
+
+- name: Add a domain user/group to a domain group
+  win_domain_group_membership:
+    name: "{{ domain_group_name }}"
+    members:
+      - "{{ ad_user }}"
+    state: "{{ ad_user_state }}"
+...
