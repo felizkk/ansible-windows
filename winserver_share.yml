@@ -1,0 +1,24 @@
+---
+- name: Windows Server File Sharing Permission
+  hosts: "{{ target_host_name }}*"
+
+  tasks:
+  - name: Add secret share
+    win_share:
+      name: internal
+      description: top secret share
+      path: C:\shares\internal
+      list: no
+      full: FKARNADI\Administrator, FKARNADI\feliz
+      read: FKARNADI\jono
+      deny: FKARNADI\steve
+
+  - name: Add public company share
+    win_share:
+      name: company
+      description: top secret share
+      path: C:\shares\company
+      list: yes
+      full: FKARNADI\Administrator, FKARNADI\feliz
+      read: FKARNADI\steve
+...
