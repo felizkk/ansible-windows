@@ -21,4 +21,13 @@
       list: yes
       full: FKARNADI\Administrator,FKARNADI\feliz
       read: FKARNADI\steve
+
+  - name: Deny jono
+    win_share:
+      name: internal
+      description: top secret share
+      path: C:\shares\internal
+      list: no
+      deny: FKARNADI\jono
+
 ...
