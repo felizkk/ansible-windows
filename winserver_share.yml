@@ -17,6 +17,7 @@
     win_share:
       name: "{{ share_name }}"
       description: "{{ share_description }}"
+      path: "{{ share_path }}"
       list: "{{ share_file_list }}"
       full: "{{ share_full }}"
       read: "{{ share_read }}"
