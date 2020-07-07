@@ -9,7 +9,7 @@
       description: top secret share
       path: C:\shares\internal
       list: no
-      full: FKARNADI\Administrator, FKARNADI\feliz
+      full: FKARNADI\Administrator,FKARNADI\feliz
       read: FKARNADI\jono
       deny: FKARNADI\steve
 
@@ -19,6 +19,6 @@
       description: top secret share
       path: C:\shares\company
       list: yes
-      full: FKARNADI\Administrator, FKARNADI\feliz
+      full: FKARNADI\Administrator,FKARNADI\feliz
       read: FKARNADI\steve
 ...
