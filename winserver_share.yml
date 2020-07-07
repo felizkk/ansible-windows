@@ -29,7 +29,7 @@
   #    description: top secret share
   #    path: C:\shares\internal
   #    list: no
-  #    full: FKARNADI\Administrator,FKARNADI\feliz
-  #    read: FKARNADI\jono
-  #    deny: FKARNADI\steve
+  #    full: DOMAIN\Administrator,DOMAIN\feliz
+  #    read: DOMAIN\jono
+  #    deny: DOMAIN\steve
 ...
