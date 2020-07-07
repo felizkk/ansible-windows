@@ -2,6 +2,11 @@
 - name: Windows Server File Sharing Permission
   hosts: "{{ target_host_name }}*"
 
+  vars:
+  - share_full: " "
+  - share_read: " "
+  - share_deny: " "
+
   tasks:
   - name: ensure share directory is present
     win_file:
