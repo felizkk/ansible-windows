@@ -9,10 +9,10 @@
       scope: global
       state: present
 
-- name: Add a domain user/group to a domain group
-  win_domain_group_membership:
-    name: "{{ domain_group_name }}"
-    members:
-      - "{{ ad_user }}"
-    state: "{{ ad_user_state }}"
+  - name: Add a domain user/group to a domain group
+    win_domain_group_membership:
+      name: "{{ domain_group_name }}"
+      members:
+        - "{{ ad_user }}"
+      state: "{{ ad_user_state }}"
 ...
