@@ -28,10 +28,11 @@
       email: "{{ ad_user_email }}"
       state: "{{ ad_user_state }}"
 
-  - name: add/remove a domain user to a domain group
+  - name: add a domain user to a domain group on creation
     win_domain_group_membership:
       name: "{{ domain_group_name }}"
       members:
         - "{{ ad_user_name }}"
-      state: "{{ ad_user_state }}"      
+      state: "{{ ad_user_state }}"
+      when: ad_user_state == present
 ...
