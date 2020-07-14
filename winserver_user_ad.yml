@@ -34,5 +34,5 @@
       members:
         - "{{ ad_user_name }}"
       state: "{{ ad_user_state }}"
-      when: ad_user_state == "present"
+    when: ad_user_state == "present"
 ...
