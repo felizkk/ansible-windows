@@ -3,13 +3,35 @@
   hosts: "{{ target_host_name }}*"
 
   # The variables will be taken from Tower Survey
+  # always required: 
+  # - domain_group_name : e.g. staff, manager, accounting
+  # - ad_user_name : e.g. bob, john, michael
+  # - ad_user_state : present/absent
+  # required for new addition
+  # - ad_user_firstname
+  # - ad_user_surname
+  # - ad_user_password
+  # - ad_user_email
   tasks:
-  - name: Create Domain Users 
-    win_domain_user:
-      name: "{{ new_user_name }}"
-      firstname: "{{ new_user_firstname }}"
-      surname: "{{ new_user_surname }}"
-      password: "{{ new_user_password }}"
-      email: "{{ new_user_email }}"
+  - name: ensure domain group is present
+    win_domain_group:
+      name: "{{ domain_group_name }}"
+      scope: global
       state: present
+
+  - name: create/delete simple domain user 
+    win_domain_user:
+      name: "{{ ad_user_name }}"
+      firstname: "{{ ad_user_firstname }}"
+      surname: "{{ ad_user_surname }}"
+      password: "{{ ad_user_password }}"
+      email: "{{ ad_user_email }}"
+      state: "{{ ad_user_state }}"
+
+  - name: add/remove a domain user to a domain group
+    win_domain_group_membership:
+      name: "{{ domain_group_name }}"
+      members:
+        - "{{ ad_user_name }}"
+      state: "{{ ad_user_state }}"      
 ...
